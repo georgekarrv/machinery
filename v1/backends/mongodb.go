@@ -284,7 +284,10 @@ func (b *MongodbBackend) updateState(signature *tasks.Signature, update bson.M) 
 // all required indexes for our collections exist
 func (b *MongodbBackend) connect() error {
 	if b.session != nil {
-		return nil
+		err := b.session.Ping()
+		if err == nil {
+			return nil
+		}
 	}
 
 	session, err := mgo.Dial(b.cnf.ResultBackend)
